@@ -11,9 +11,7 @@ const songTitle = document.querySelector('.play-zone-right__title');
 const songArtist = document.querySelector('.play-zone-right__artist');
 
  const audio = new Audio();
- console.log(audio.currentTime)
- console.log(audio.duration)
-console.log(audio.volume)
+ 
 
  const songsData = {
     songs:[... allSongs],
@@ -102,10 +100,6 @@ const playNextSong= () => {
         songsData.currentSongIndex = 0; // Loop back to the first song
     }
     const nextSong = songsData.songs[songsData.currentSongIndex];
-    console.log('Next song index:', songsData.currentSongIndex);
-    console.log('Next song ID:', nextSong.id);      
-    console.log('Next song title:', nextSong.title);    
-    console.log('Next song artist:', nextSong.artist);
     playSong(nextSong.id);
     console.log('Next song:', nextSong);
 }; 
@@ -127,9 +121,7 @@ const playSong = (id) => {
             audio.src = song.src;
             audio.title = song.title;
             songsData.currentSong = song;
-            console.log('current song', songsData.currentSong);
             songsData.currentSongIndex = songsData.songs.findIndex(s => s.id === id);
-            console.log('index',songsData.currentSongIndex);
             audio.load();
             audio.play();
             songsData.isPlaying = true;
@@ -193,16 +185,13 @@ displaySongs(songsData.songs);
 
 
 
-
-
  shuffleButton.addEventListener('click', () => {
-    console.log('Shuffle button clicked');
     shuffleSongs();
-    console.log('Songs shuffled:', songsData.songs);
     const firstSong = songsData.songs[songsData.currentSongIndex];
-    console.log('First song after shuffle:', firstSong);
     playSong(firstSong.id);
 });
+
+
 previousButton.addEventListener('click', () => {
     if (songsData.isPlaying) {
         console.log('Previous song button clicked');
@@ -210,7 +199,8 @@ previousButton.addEventListener('click', () => {
     } else {
         console.log('No song is currently playing.');
     }
-});     
+});    
+
 
 pauseButton.addEventListener('click', () => {
     pauseSong();
@@ -230,11 +220,9 @@ nextButton.addEventListener('click', () => {
 playButton.addEventListener('click', () => {
     if (!songsData.isPlaying) {
         if (songsData.currentSong === null) {
-            console.log('No song is currently selected.');
             playSong(songsData.songs[songsData.currentSongIndex].id);
             
         } else {
-            console.log('Playing current song:', songsData.currentSong);
             const song = songsData.songs[songsData.currentSongIndex];
             playSong(song.id);
         }
