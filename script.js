@@ -230,3 +230,8 @@ playButton.addEventListener('click', () => {
         songsData.isPlaying = true;
     }
 });
+volumeSlider.addEventListener('input', (event) => {
+    const volume = event.target.value;
+    audio.volume = volume / 100; // Assuming the slider value is between 0 and 100
+    console.log('Volume set to:', audio.volume);
+});
