@@ -3,16 +3,18 @@ const previousButton = document.querySelector('.play-zone-right__controls--prev'
 const nextButton = document.querySelector('.play-zone-right__controls--next');
 const playButton = document.querySelector('.play-zone-right__controls--play');
 const pauseButton = document.querySelector('.play-zone-right__controls--pause');
-const volumeSlider = document.querySelector('.play-zone-right__controls--volume');  
+const volumeSlider = document.querySelector('.volume-bar');  
 const searchInput = document.querySelector('.search-input');
 const searchButton = document.querySelector('.search'); 
 const shuffleButton = document.querySelector('.play-zone-right__controls--shuffle');
 const songTitle = document.querySelector('.play-zone-right__title');
 const songArtist = document.querySelector('.play-zone-right__artist');
+const progressBar = document.querySelector('.progress-bar');
+const durationDisplay = document.querySelector('.duration-display');
+const progrssTime = document.querySelector('.progress-time');
 
  const audio = new Audio();
  
-
  const songsData = {
     songs:[... allSongs],
     currentSongIndex: 0,
@@ -166,6 +168,7 @@ songs.forEach((song) => {
     songItem.innerHTML += `
         <span class="music-list__item--title">${song.title}</span>
         <span class="music-list__item--author">${song.artist}</span>
+        <span class="music-list__item--author">${song.duration}</span>
         <button class="music-list__item--button delete-song_${song.id}" aria-label="Delete ${song.id}" onclick=deletSong('${song.id}')">
             <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="8" cy="8" r="8" fill="none" class="delete-song"/>
@@ -219,19 +222,52 @@ nextButton.addEventListener('click', () => {
 
 playButton.addEventListener('click', () => {
     if (!songsData.isPlaying) {
+  
+
         if (songsData.currentSong === null) {
             playSong(songsData.songs[songsData.currentSongIndex].id);
             
         } else {
             const song = songsData.songs[songsData.currentSongIndex];
             playSong(song.id);
+            
         }
         console.log('Playing song:', songsData.isPlaying);
+
         songsData.isPlaying = true;
+
     }
 });
-volumeSlider.addEventListener('input', (event) => {
+console.log('v',volumeSlider)
+
+volumeSlider.addEventListener('click', (event) => {
     const volume = event.target.value;
+    console.log('Volume slider value:', volume);
     audio.volume = volume / 100; // Assuming the slider value is between 0 and 100
     console.log('Volume set to:', audio.volume);
 });
+audio.addEventListener('timeupdate', () => {
+    
+    const currentTime = audio.currentTime;
+    const duration = audio.duration;
+    const progressPercentage = (currentTime / duration) * 100;
+    //progressBar.style.width = `${progressPercentage}%`;
+    progressBar.value = progressPercentage; // Update the progress bar value
+   // progressBar.value = currentTime; // Update the progress bar value
+    songsData.songCurrentTime = currentTime; // Update the current song time
+    console.log('Current time:', currentTime) 
+    console.log('Duration:', duration)
+    console.log('Progress:', progressPercentage);
+   
+    
+    // Update the displayed time
+    progrssTime.textContent = formatTime(currentTime);
+    durationDisplay.textContent = formatTime(duration);
+});
+
+
+const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
