@@ -76,6 +76,11 @@ const shuffleSongs = () => {
     playSong(firstSong.id);
 };  
 const playPreviousSong = () => {
+    if (songsData.currentSongIndex === null || songsData.songs.length === 0) {
+        console.log('No songs available to play.');
+        return;
+    }
+    
     if (songsData.currentSongIndex > 0) {
         songsData.currentSongIndex--;
     } else {
@@ -83,6 +88,8 @@ const playPreviousSong = () => {
     }
     const previousSong = songsData.songs[songsData.currentSongIndex];
     playSong(previousSong.id);
+    console.log(' previous song duration:', previousSong.duration);
+     durationDisplay.textContent = previousSong.duration;
     console.log('Previous song:', previousSong);
 };  
 
@@ -96,14 +103,27 @@ const pauseSong = () => {
     }
 };  
 const playNextSong= () => {
+    if(allSongs.currentSong === null ||allSongs.isPlaying   === false) {
+        console.log('No song is currently playing.');
+        
+        playSong(songsData.songs[0].id);
+        allSongs.isPlaying = true;
+        return;
+    }else {
+
     if (songsData.currentSongIndex < songsData.songs.length - 1) {
         songsData.currentSongIndex++;
     } else {
         songsData.currentSongIndex = 0; // Loop back to the first song
     }
     const nextSong = songsData.songs[songsData.currentSongIndex];
+    console.log('Next song:', nextSong.duration);
+    //durationDisplay.textContent = `${formatTime((duration))}`;
+    durationDisplay.textContent = nextSong.duration;
     playSong(nextSong.id);
-    console.log('Next song:', nextSong);
+   
+     }
+     
 }; 
 
 const getCurrentSongIndex = (songs) => {
@@ -130,6 +150,8 @@ const playSong = (id) => {
             songsData.songCurrentTime = songsData.songCurrentTime || 0;
             songTitle.textContent  = currentSongTitle? currentSongTitle : 'Song Title';
             songArtist.textContent = currentSongArtist ? currentSongArtist : 'Artist Name';
+            
+            durationDisplay.textContent = song.duration;
            
         }
     }
@@ -144,9 +166,8 @@ const gotoNextSong = () => {
         songsData.currentSongIndex = 0; // Loop back to the first song
     }
     const nextSong = songsData.songs[songsData.currentSongIndex];
+    
     playSong(nextSong.id);
-
-    console.log('Next song:', nextSong);
 };
 
 
@@ -160,15 +181,17 @@ audio.addEventListener('ended', () => {
 const songList = document.querySelector('.music-list__items');
 
 const displaySongs = (songs) => {
+   
     songList.innerHTML = ''; // Clear the existing list
 songs.forEach((song) => {
+    console.log('Displaying song:', typeof song.duration);
      const songItem = document.createElement('li');
     songItem.classList.add('music-list__item');
      songItem.setAttribute('data-id', song.id);
     songItem.innerHTML += `
         <span class="music-list__item--title">${song.title}</span>
         <span class="music-list__item--author">${song.artist}</span>
-        <span class="music-list__item--author">${song.duration}</span>
+        <span class="music-list__item--duration">${(song.duration)}</span>
         <button class="music-list__item--button delete-song_${song.id}" aria-label="Delete ${song.id}" onclick=deletSong('${song.id}')">
             <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="8" cy="8" r="8" fill="none" class="delete-song"/>
@@ -196,34 +219,43 @@ displaySongs(songsData.songs);
 
 
 previousButton.addEventListener('click', () => {
-    if (songsData.isPlaying) {
+    if (songsData.isPlaying || songsData.currentSong !== null) {
         console.log('Previous song button clicked');
         playPreviousSong();
     } else {
-        console.log('No song is currently playing.');
-    }
-});    
+        
+        const index = getCurrentSongIndex(songsData.songs);
+
+        if (index !== null) {
+             const previousSong = songsData.songs[index];
+            playSong(previousSong.id);
+        } else {
+            playSong(songsData.songs[0].id);
+        }
+        }
+    });    
 
 
 pauseButton.addEventListener('click', () => {
     pauseSong();
-    console.log('Pause button clicked');
+    
 });
 
 
-nextButton.addEventListener('click', () => {
-    if (songsData.isPlaying) {
-        console.log('Next song button clicked');
-        playNextSong();
-    } else {
-        console.log('No song is currently playing.');
-    }
-}); 
+nextButton.addEventListener('click', playNextSong)
+    // () => {
+    // if (songsData.isPlaying) {
+    //     console.log('Next song button clicked');
+    //     playNextSong();
+
+    // } else {
+    //     console.log('No song is currently playing.');
+         playNextSong()
+    // }
+// }); 
 
 playButton.addEventListener('click', () => {
     if (!songsData.isPlaying) {
-  
-
         if (songsData.currentSong === null) {
             playSong(songsData.songs[songsData.currentSongIndex].id);
             
@@ -232,20 +264,19 @@ playButton.addEventListener('click', () => {
             playSong(song.id);
             
         }
-        console.log('Playing song:', songsData.isPlaying);
-
+        
         songsData.isPlaying = true;
 
     }
 });
-console.log('v',volumeSlider)
+
 
 volumeSlider.addEventListener('click', (event) => {
     const volume = event.target.value;
-    console.log('Volume slider value:', volume);
     audio.volume = volume / 100; // Assuming the slider value is between 0 and 100
-    console.log('Volume set to:', audio.volume);
+  
 });
+
 audio.addEventListener('timeupdate', () => {
     
     const currentTime = audio.currentTime;
@@ -253,20 +284,20 @@ audio.addEventListener('timeupdate', () => {
     const progressPercentage = (currentTime / duration) * 100;
     //progressBar.style.width = `${progressPercentage}%`;
     progressBar.value = progressPercentage; // Update the progress bar value
-   // progressBar.value = currentTime; // Update the progress bar value
+   // progressBar.value = currentTime;
     songsData.songCurrentTime = currentTime; // Update the current song time
-    console.log('Current time:', currentTime) 
-    console.log('Duration:', duration)
-    console.log('Progress:', progressPercentage);
+    
    
     
     // Update the displayed time
-    progrssTime.textContent = formatTime(currentTime);
-    durationDisplay.textContent = formatTime(duration);
+     progrssTime.textContent = `${(formatTime((currentTime)))}`;
+    // // Update the duration display
+    
 });
 
 
 const formatTime = (time) => {
+       
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
