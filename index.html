@@ -11,13 +11,13 @@
 </head>
 <body>
     <div class="play-station">
-        <section class="music-header">
-            <div class="lines-left">
+        <section class="play-station-header">
+            <div class="lines-container">
                 <div class="lines"></div>
                 <div class="lines"></div>
             </div>
-            <div id="header">One Music Station</div>   
-            <div class="lines-right">
+            <h1 id="header">One Music Station</h1>   
+            <div class="lines-container">
                 <div class="lines"></div>
                 <div class="lines"></div>
             </div>
@@ -49,7 +49,8 @@
                         </button>
                         <button class="play-zone-right__controls--play btn" >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path d="M8 5v14l11-7z"/>
+                                <!-- <path d="M8 5v14l11-7z"/> -->
+                                 <path d="M23.2248 0L7.03964 9.5L23.2248 19L23.2248 0Z" />
                             </svg>
                         </button>
                         <button class="play-zone-right__controls--pause btn">
@@ -73,27 +74,28 @@
                     </div>
                 </div>
             </div>
-            <div class="play-zone-right__controls">
+            <!-- <div class="play-zone-right__controls"> -->
                 <div class="play-zone-right__progress">
                     <span class="progress-time"></span>
-                    <input type="range" min="0" max="100" value="0" class="progress-bar"/>
-                    <span class="duration-display"></span>
+                <input type="range" min="0"  value="0" max="50" class="progress-bar"/>
+                <!-- <progress max="100" class="progress-bar" value="0"></progress>    -->
+                <span class="duration-display"></span>
                 </div>
                 <div class="play-zone-right__volume">
                     <label for="volume">Volume</label>
-                    <input type="range" id="volume" min="0" max="100" value="50" class="volume-bar"/>
-                </div>
+                    <input type="range" id="volume" min="0" max="50" value="0" class="volume-bar"/>
+                <!-- </div> -->
             </div>
         </section>
     </div>
         <div class="play-list">
-            <section class="music-header">
-                <div class="lines-left">
+            <section class="play-list-header">
+                <div class="lines-container">
                     <div class="lines"></div>
                     <div class="lines"></div>
                 </div>
-                <div id="header">Play list Station</div>   
-                <div class="lines-right">
+                <h1 id="header">Play list Station</h1>   
+                <div class="lines-container">
                     <div class="lines"></div>
                     <div class="lines"></div>
                 </div>
@@ -105,7 +107,7 @@
                 <div class="marquee-container">
                     <div class="marquee-content">
                         <span>Your Looping Text Here</span>
-                        <span>Your Looping Text Here</span> <!-- Duplicate for seamless loop -->
+                        <span>Your Looping Text Here</span> 
                     </div>
               </div>
                 <div>
@@ -113,6 +115,6 @@
                    </ul>
                </div>
         </div>     
-    <script type="module" src="./script.js"></script>
- </body>
+        <script type="module" src="./script.js"></script>
+    </body>
 </html>
