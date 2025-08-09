@@ -408,12 +408,26 @@ body{
         z-index: 1000;
         background-color: transparent;
         margin-left: 5px;
-        height:270px;
+        height:250px;
         width: 270px;
         margin-top: 15px;
+        margin-bottom: 10px;
        
     }
 
+     .marquee-container{
+        overflow: hidden;
+        box-sizing: border-box;
+        width: 245px;
+     }
+     
+   /* @keyframes  marquee{
+    from{
+        transform: translateX(-90%)
+    }to{
+        transform: translateX(-90%)
+    }
+   } */
 
 .song-title-name{
     height: 100px;
