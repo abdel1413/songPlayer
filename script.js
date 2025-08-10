@@ -60,7 +60,8 @@ const shuffleSongs = () => {
 // If the current song is the first one, it loops back to the last song in the playlist
 // It updates the current song index and plays the song
 const playPreviousSong = () => {
-   console.log
+  console.log('curr song',songsData.currentSong)
+  
 };  
 
  
@@ -73,27 +74,22 @@ const playPreviousSong = () => {
 //will come bach
 const playNextSong= () => {
 
- let curSongId =  getCurrentSongIndex(songsData.currentSong.id)
-      console.log('curid',curSongId)
-      
-      
-      console.log(songsData.songs.length)
-      if(songsData.songs.length-1 !== curSongId) {
-         playSong(curSongId +1)
-       
-     }else{
-       
-         setTimeout(() => {
-         songArtist.textContent = (`You have reach the end of playlist`)
-            
-         }, 500);
-       
-         
-         songArtist.textContent = `${songsData.currentSong.artist}`
+    console.log('cur',songsData.currentSongIndex)
+    
+    if(songsData.currentSong === null){
+        playSong(songsData.songs[0].id)
+    }else{
+        let curSongId =  getCurrentSongIndex(songsData.currentSong.id) ||0
+          if( curSongId < songsData.songs.length-1 ) {
+             playSong(curSongId +1)
+           
+         }else{
+             setTimeout(() => {
+                 songArtist.textContent = `${songsData.currentSong.artist}`
+            }, 5000)
+            songArtist.textContent = `You have reach the end of playlist`
+              }
         }
-
-
-   
 }
    
      
@@ -225,27 +221,18 @@ pauseButton.addEventListener('click', ()=>{
 );
 
 
-nextButton.addEventListener('click', playNextSong)
-    // () => {
-    // if (songsData.isPlaying) {
-    //     console.log('Next song button clicked');
-    //     playNextSong();
+nextButton.addEventListener('click',()=>{
+    playButton.style.display ='none'
+    pauseButton.style.display='block'
+    playNextSong()
 
-    // } else {
-    //     console.log('No song is currently playing.');
-        //  playNextSong()
-    // }
-// }); 
+})
+    
 
 playButton.addEventListener('click', () => {
-    
     pauseButton.style.display = 'block'; // Show pause button when play button is clicked
     playButton.style.display = 'none'; // Hide play button when play button is clicked
     
-  
-   
-    
-
         if (songsData.currentSong === null) {
             playSong(songsData.songs[0].id);
             
