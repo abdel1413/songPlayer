@@ -97,6 +97,15 @@ body{
    
 }
 
+
+.play-song{
+    border: 2px solid red;
+    cursor: pointer;
+}
+
+.play-song:hover{
+    background-color: #2f2f44;
+}
  .song-title-name{
     height: 100px;
     margin-bottom: 20px;
@@ -149,7 +158,8 @@ body{
     width: 90%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content:center;
+   
     box-sizing: border-box; 
     margin: 10px 10px;
     
@@ -160,6 +170,7 @@ body{
     border-radius: 5px;
      height: 4px;
     outline: none;  
+    margin: 0 5px;
   
 }
 .progress-bar::-webkit-slider-thumb {
@@ -186,9 +197,10 @@ body{
     display: flex;
     justify-content:flex-start;
     align-items:center;
-   margin: 0 auto;
+  
    padding: 0 15px;
    height: 5px;
+  
 
   
    
@@ -199,7 +211,13 @@ body{
     background: #383131;
     border-radius: 5px;
     outline: none;
+  
    
+}
+label[for="volume"]{
+ 
+    margin-right: 5px;
+    font-size: .8rem;
 }
 
 /* End of play station */
@@ -378,9 +396,51 @@ body{
        
     }
 
+    .play-station-header{
+
+    }
+
+
+
+
+    .play-station-header,.play-list-header{
+   width: 100%;
+    height: 20px;
+  
+    
+    }
+
+
+    .lines-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+    margin: 0 5px;
+
+}
+.lines-container > div { 
+    width: 100%;     
+    min-width: 40px;
+    
+    height: 3px;  
+} 
+ 
+
+#header { 
+    display: block;
+   text-align: center;
+    color: whitesmoke;
+   font-size: 12px;
+padding: 0;
+margin : 0 5px
+  
+
+}
+   
+
     .play-zone{
        width:100%;
-       
        margin: 0;
     }
     .play-zone > #play-zone__song-details{
@@ -474,13 +534,21 @@ body{
 
     .music-list__items {
         width: 300px;
+        font-size: .9rem;
+   
        
     }
 
 
 .music-list__item--title{
     width: 150px;
+    font-size: .8rem;
 
+}
+.music-list__item--author{
+    font-size: .7rem; 
+ 
+    padding: 0;
 }
        
 }

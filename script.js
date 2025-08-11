@@ -12,6 +12,7 @@ const songArtist = document.querySelector('.play-zone-right__artist');
 const progressBar = document.querySelector('.progress-bar');
 const durationDisplay = document.querySelector('.duration-display');
 const progrssTime = document.querySelector('.progress-time');
+const playElement = document.querySelector('.play-song')
 
 pauseButton.style.display = 'none'; // Hide pause button initially
  const audio = new Audio();
@@ -61,7 +62,17 @@ const shuffleSongs = () => {
 // It updates the current song index and plays the song
 const playPreviousSong = () => {
   console.log('curr song',songsData.currentSong)
-  
+
+  if(songsData.currentSong ===null || songsData.currentSong.id === 0){
+      songArtist.textContent ="No previous song to play."
+    setTimeout(() => {
+        songArtist.textContent = 'Name'
+    }, 5000);
+  }else{
+    const currSongId = getCurrentSongIndex(songsData.currentSong.id)
+   currSongId === 0? playSong(currSongId): playSong(currSongId -1)
+  }
+
 };  
 
  
@@ -74,8 +85,8 @@ const playPreviousSong = () => {
 //will come bach
 const playNextSong= () => {
 
-    console.log('cur',songsData.currentSongIndex)
-    
+
+
     if(songsData.currentSong === null){
         playSong(songsData.songs[0].id)
     }else{
@@ -87,7 +98,7 @@ const playNextSong= () => {
              setTimeout(() => {
                  songArtist.textContent = `${songsData.currentSong.artist}`
             }, 5000)
-            songArtist.textContent = `You have reach the end of playlist`
+            songArtist.textContent = `You have reached the end of playlist`
               }
         }
 }
@@ -117,7 +128,7 @@ const playSong = (id) => {
         audio.src = currentSongSrc; 
         audio.title =currentSongArtist; 
         audio.load(); // Load the new audio source
-        
+        console.log( 'type of id',typeof  song.id)
         songTitle.textContent  = currentSongTitle? currentSongTitle : 'Song Title';
         songArtist.textContent = currentSongArtist ? currentSongArtist : 'Artist Name';
         durationDisplay.textContent = song.duration;
@@ -132,18 +143,6 @@ const playSong = (id) => {
         songsData.currentSong = song; 
             audio.play();
     }
-   
-
-// const gotoNextSong = () => {
-//     if (songsData.currentSongIndex < songsData.songs.length - 1) {
-//         songsData.currentSongIndex++;
-//     } else {
-//         songsData.currentSongIndex = 0; // Loop back to the first song
-//     }
-//     const nextSong = songsData.songs[songsData.currentSongIndex];
-//     playSong(nextSong.id);
-// };
-
 
 audio.addEventListener('ended', () => {
     console.log('Song ended');
@@ -162,7 +161,7 @@ songs.forEach((song) => {
     songItem.classList.add('music-list__item');
      songItem.setAttribute('data-id', song.id);
     songItem.innerHTML += `
-        <button class="play-song" onclick="playSong(${song.id}}">
+        <button class="play-song" data-song-id="${song.id}">
             <span class="music-list__item--title">${song.title}</span>
             <span class="music-list__item--author">${song.artist}</span>
             <span class="music-list__item--duration">${(song.duration)}</span>
@@ -180,7 +179,6 @@ songs.forEach((song) => {
 });
 }
 
-
 displaySongs(songsData.songs);
 
 
@@ -194,22 +192,9 @@ displaySongs(songsData.songs);
 });
 
 
-previousButton.addEventListener('click', () => {
-    if (songsData.isPlaying || songsData.currentSong !== null) {
-        console.log('Previous song button clicked');
-        playPreviousSong();
-    } else {
-        
-        const index = getCurrentSongIndex(songsData.songs);
-
-        if (index !== null) {
-             const previousSong = songsData.songs[index];
-            playSong(previousSong.id);
-        } else {
-            playSong(songsData.songs[0].id);
-        }
-        }
-    });    
+previousButton.addEventListener('click',
+         playPreviousSong);
+     
 
 
 pauseButton.addEventListener('click', ()=>{
@@ -220,6 +205,8 @@ pauseButton.addEventListener('click', ()=>{
 }
 );
 
+
+ 
 
 nextButton.addEventListener('click',()=>{
     playButton.style.display ='none'
@@ -233,12 +220,15 @@ playButton.addEventListener('click', () => {
     pauseButton.style.display = 'block'; // Show pause button when play button is clicked
     playButton.style.display = 'none'; // Hide play button when play button is clicked
     
+    
         if (songsData.currentSong === null) {
             playSong(songsData.songs[0].id);
-            
+             
         } else {
            audio.currentTime = songsData.songCurrentTime
             const song = songsData.currentSong;
+            
+           
             playSong(song.id);
             
         } 
@@ -254,7 +244,7 @@ volumeSlider.addEventListener('click', (event) => {
 });
 
 audio.addEventListener('timeupdate', () => {
-    
+
     const currentTime = audio.currentTime;
     const duration = audio.duration;
     const progressPercentage = (currentTime / duration) * 100;
@@ -263,21 +253,35 @@ audio.addEventListener('timeupdate', () => {
     progressBar.value = progressPercentage; 
    // progressBar.value = currentTime;
     songsData.songCurrentTime = currentTime; // Update the current song time
-    
     // Update the displayed time
      progrssTime.textContent = `${(formatTime((currentTime)))}`;
     // // Update the duration display
     
 });
 
-progressBar.value='0';
+
 
 const formatTime = (time) => {
-       
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
+
+
+      //click on the element to play start playing
+      // create a data attribut to store each specific id 
+      // access all the elements then attach an event to each of then
+      // get the data attribute for each and convert it back to
+      // number then pass it into playsong function as param.
+      const playSongElements = document.querySelectorAll('.play-song')
+      playSongElements.forEach((el)=>{
+          el.addEventListener('click',()=>{
+            playSong(Number(el.dataset.songId))
+            playButton.style.display ="none"
+            pauseButton.style.display = 'block'
+
+        } )
+      })
 
     
     const  deleteBtn = document.querySelectorAll('.music-list__item--button');
