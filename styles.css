@@ -59,7 +59,9 @@ body{
 .play-zone {
     background-color: #1B1B30;
     width:445px;
+    height: 230px;
     padding: 5px;
+    
    
 }
  .play-zone > #play-zone__song-details{
@@ -68,17 +70,15 @@ body{
   align-items: center;
   column-gap: 10px;
   width: 440px;
-  height: 180px;
+  height: 170px;
   margin: 0; 
- 
 
-             
 }
 
 
 .play-zone__left > img {
     width: 170px;
-    border: 5px solid rgb(5, 5, 26);
+    /* border: 5px solid rgb(5, 5, 26); */
     
     
 
@@ -90,16 +90,13 @@ body{
     height: 165px; 
     width: 145px; 
     background-color: rgb(19, 19, 86);
-    border: 3px solid  rgb(14, 14, 55);;
     margin-right: 10px;
  
-
-   
 }
 
 
 .play-song{
-    border: 2px solid red;
+  
     cursor: pointer;
 }
 
@@ -159,9 +156,9 @@ body{
     display: flex;
     align-items: center;
     justify-content:center;
-   
+    
     box-sizing: border-box; 
-    margin: 10px 10px;
+    margin: 10px 0;
     
 }
 .progress-bar {
@@ -197,11 +194,9 @@ body{
     display: flex;
     justify-content:flex-start;
     align-items:center;
-  
    padding: 0 15px;
    height: 5px;
-  
-
+   
   
    
 }
@@ -211,12 +206,13 @@ body{
     background: #383131;
     border-radius: 5px;
     outline: none;
+    margin-top: 10px;
   
    
 }
 label[for="volume"]{
- 
     margin-right: 5px;
+    margin-top: 10px;
     font-size: .8rem;
 }
 
@@ -326,10 +322,10 @@ label[for="volume"]{
 }
 @keyframes marquee {
     from {
-        transform: translateX(-100%);
+        transform: translateX(100%);
     }
     to {
-        transform: translateX(100%);
+        transform: translateX(-100%);
     }
 }
 
@@ -415,14 +411,12 @@ label[for="volume"]{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    
     margin: 0 5px;
 
 }
 .lines-container > div { 
     width: 100%;     
     min-width: 40px;
-    
     height: 3px;  
 } 
  
@@ -442,10 +436,15 @@ margin : 0 5px
     .play-zone{
        width:100%;
        margin: 0;
+       height: 250px;
+    
+
     }
+     
+
     .play-zone > #play-zone__song-details{
         width: 90%;
-        height: 240px;
+        height: 50px;
         padding: 0;
          box-sizing: border-box;
          position: relative;
@@ -458,7 +457,7 @@ margin : 0 5px
         margin-top: 0;
         position: inherit;
         z-index: -1;
-        height: 270px;
+        height: 180px;
         width: 100%;  
     }
     
@@ -468,7 +467,7 @@ margin : 0 5px
         z-index: 1000;
         background-color: transparent;
         margin-left: 5px;
-        height:250px;
+        height:150px;
         width: 270px;
         margin-top: 15px;
         margin-bottom: 10px;
@@ -491,7 +490,7 @@ margin : 0 5px
 
 .song-title-name{
     height: 100px;
-    margin-bottom: 100px;
+    margin-bottom: 30px;
     
  }
 .play-zone-right__title {

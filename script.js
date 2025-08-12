@@ -4,7 +4,7 @@ const nextButton = document.querySelector('.play-zone-right__controls--next');
 const playButton = document.querySelector('.play-zone-right__controls--play');
 const pauseButton = document.querySelector('.play-zone-right__controls--pause');
 const volumeSlider = document.querySelector('.volume-bar');  
-const searchInput = document.querySelector('.search-input');
+const searchArtist = document.querySelector('.search-input');
 const searchButton = document.querySelector('.search'); 
 const shuffleButton = document.querySelector('.play-zone-right__controls--shuffle');
 const songTitle = document.querySelector('.play-zone-right__title');
@@ -13,6 +13,7 @@ const progressBar = document.querySelector('.progress-bar');
 const durationDisplay = document.querySelector('.duration-display');
 const progrssTime = document.querySelector('.progress-time');
 const playElement = document.querySelector('.play-song')
+const marqueeContent = document.querySelector('.marquee-content')
 
 pauseButton.style.display = 'none'; // Hide pause button initially
  const audio = new Audio();
@@ -25,10 +26,23 @@ pauseButton.style.display = 'none'; // Hide pause button initially
     currentSong: null
  }     
 
-
-
  progressBar.value = 0; // Initialize progress bar value
 
+ const handleSearch = ()=>{
+  let matchingSongs =  songsData.songs.map(song => {
+         let artist = searchArtist.value;
+         artist = artist.replace(artist[0], artist[0].toUpperCase())
+           if(artist=== song.title || artist=== song.artist){
+             return song;
+           }
+    })
+     displaySongs(matchingSongs)
+ }
+
+ searchButton.addEventListener('click', ()=>{
+    handleSearch()
+    searchArtist.value = ''
+ })
 
 const shuffleSongs = () => {
     for (let i = songsData.songs.length - 1; i > 0; i--) {
@@ -54,8 +68,6 @@ const shuffleSongs = () => {
     audio.currentTime = 0; // Reset audio current time after shuffle
    
 };  
-
-
 //play previous song function
 // This function plays the previous song in the playlist
 // If the current song is the first one, it loops back to the last song in the playlist
@@ -74,18 +86,15 @@ const playPreviousSong = () => {
   }
 
 };  
-
  
-
+const playPauseBtn = ()=> {
+    songsData.isPlaying ? playButton.style.display = "none"
+    : pauseButton.style.display="block" 
+}
 
 //check if the no song playing then grab the first song
 // otherwise go to next song 
-
-
-//will come bach
 const playNextSong= () => {
-
-
 
     if(songsData.currentSong === null){
         playSong(songsData.songs[0].id)
@@ -102,8 +111,6 @@ const playNextSong= () => {
               }
         }
 }
-   
-     
     
 const getCurrentSongIndex = (songId) => {
    const songIndex = songsData.songs.findIndex(song => song.id === songId);
@@ -114,13 +121,14 @@ const getCurrentSongIndex = (songId) => {
  
 }
 
-
 const pauseSong = () => {
         songsData.songCurrentTime = audio.currentTime;
         audio.pause() 
 }; 
 
 const playSong = (id) => {
+
+    
         const song = songsData.songs.find(song => song.id === id);
         const currentSongTitle= song.title;
         const currentSongArtist = song.artist;
@@ -139,24 +147,24 @@ const playSong = (id) => {
         }else {
                audio.currentTime = songsData.songCurrentTime;   
         }
-       
+          marqueeContent.innerHTML = `
+          <span> ${currentSongTitle} </span>
+          <span>. </span>
+          <span> ${currentSongTitle}</span>`
         songsData.currentSong = song; 
             audio.play();
     }
 
 audio.addEventListener('ended', () => {
     console.log('Song ended');
-    gotoNextSong();
+     playNextSong()
 }); 
 
-
-
 const songList = document.querySelector('.music-list__items');
-
 const displaySongs = (songs) => {
-   
     songList.innerHTML = ''; // Clear the existing list
-songs.forEach((song) => {
+    songs.forEach((song) => {
+       if(song !== undefined){
      const songItem = document.createElement('li');
     songItem.classList.add('music-list__item');
      songItem.setAttribute('data-id', song.id);
@@ -176,97 +184,65 @@ songs.forEach((song) => {
         </button>
     `;
    songList.appendChild(songItem);
+       }
 });
 }
-
 displaySongs(songsData.songs);
-
 
  shuffleButton.addEventListener('click', () => {
     shuffleSongs();
-    pauseButton.style.display ='none'
-    playButton.style.display="block"
+    // pauseButton.style.display ='none'
+    // playButton.style.display="block"
+    // playPauseBtn()
     const firstSong = songsData.songs[songsData.currentSongIndex];
-    
-   // playSong(firstSong.id);
 });
 
-
-previousButton.addEventListener('click',
-         playPreviousSong);
-     
-
-
+previousButton.addEventListener('click',playPreviousSong);
 pauseButton.addEventListener('click', ()=>{
-    pauseButton.style.display = 'none'; // Hide pause button when paused
-    playButton.style.display = 'block'; // Show play button when paused
+//   playPauseBtn()
     pauseSong()
-    
-}
-);
-
-
- 
-
+});
 nextButton.addEventListener('click',()=>{
-    playButton.style.display ='none'
-    pauseButton.style.display='block'
+    // playButton.style.display ='none'
+    // pauseButton.style.display='block'
+    playPauseBtn()
     playNextSong()
-
 })
-    
 
 playButton.addEventListener('click', () => {
-    pauseButton.style.display = 'block'; // Show pause button when play button is clicked
-    playButton.style.display = 'none'; // Hide play button when play button is clicked
-    
-    
+    // pauseButton.style.display = 'block'; // Show pause button when play button is clicked
+    // playButton.style.display = 'none'; // Hide play button when play button is clicked
+        playPauseBtn()
         if (songsData.currentSong === null) {
             playSong(songsData.songs[0].id);
-             
         } else {
            audio.currentTime = songsData.songCurrentTime
             const song = songsData.currentSong;
-            
-           
             playSong(song.id);
-            
-        } 
+        }
 });
 
 // audio.volume = volumeSlider.value;
-
 volumeSlider.addEventListener('click', (event) => {
     const volume = event.target.value;
-    console.log('vo', volume)
     audio.volume = volume / 100; 
-  
 });
 
 audio.addEventListener('timeupdate', () => {
-
     const currentTime = audio.currentTime;
     const duration = audio.duration;
     const progressPercentage = (currentTime / duration) * 100;
-    // progressBar.style.width = `${progressPercentage}%`;
-
     progressBar.value = progressPercentage; 
-   // progressBar.value = currentTime;
     songsData.songCurrentTime = currentTime; // Update the current song time
-    // Update the displayed time
+  
      progrssTime.textContent = `${(formatTime((currentTime)))}`;
-    // // Update the duration display
-    
 });
-
-
 
 const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
-
 
       //click on the element to play start playing
       // create a data attribut to store each specific id 
@@ -277,24 +253,18 @@ const formatTime = (time) => {
       playSongElements.forEach((el)=>{
           el.addEventListener('click',()=>{
             playSong(Number(el.dataset.songId))
-            playButton.style.display ="none"
-            pauseButton.style.display = 'block'
-
+            // playButton.style.display ="none"
+            // pauseButton.style.display = 'block'
+            playPauseBtn()
         } )
       })
 
-    
     const  deleteBtn = document.querySelectorAll('.music-list__item--button');
     deleteBtn.forEach((btn) => {
-        
         btn.addEventListener('click', ()=>{
             const songId = btn.getAttribute('data-id');
-            console.log( 'parent', btn.parentElement);
-            btn.parentElement.remove(); 
-             console.log('songs before deletion:', songsData.songs);   
+            btn.parentElement.remove();   
             songsData.songs.splice(songId,1)
-            console.log('songs after deletion:', songsData.songs);
-            
         })
     })
     
