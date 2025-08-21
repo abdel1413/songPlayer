@@ -234,6 +234,7 @@ label[for="volume"]{
     
 }
 
+
 .music-list__items {
     display: flex;
     flex-direction: column;
@@ -294,6 +295,11 @@ label[for="volume"]{
     background-color: rgb(196, 40, 40)
 }
 
+.focus-playing-song{
+  
+    border: 1px dashed goldenrod;
+}
+
 .search{
     background-color: #04040a;
     color: whitesmoke;
@@ -305,11 +311,7 @@ label[for="volume"]{
     font-size: 1rem;
 
 }
-.active-search {
-    background-color: #015CC8;
-    color: whitesmoke;
-    animation: transition 0.3s ease-in-out;
-}
+
 
 .marquee-container {
     overflow: hidden;
@@ -385,6 +387,20 @@ label[for="volume"]{
     fill: red;
 }   
 
+.refresh-btn{
+    margin: auto;
+    padding: 10px;
+    background-color: #0b1521;
+    color: whitesmoke;
+    border: 1px solid #0b1521;
+    border-radius: 10%;
+    cursor: pointer;
+    margin-bottom: 20px;
+    
+}
+.refresh-btn:hover{
+    background-color: #04040a;
+}
 @media(max-width: 700px){
     .play-station, .play-list{
         width: 300px;
@@ -534,7 +550,7 @@ margin : 0 5px
     .music-list__items {
         width: 300px;
         font-size: .9rem;
-   
+        border: 2px solid red;
        
     }
 
@@ -550,4 +566,15 @@ margin : 0 5px
     padding: 0;
 }
        
+}
+
+li > .refresh-btn{
+    text-align: center;
+    font-size: 1.2rem;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    border:2px solid  blue
 }

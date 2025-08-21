@@ -12,12 +12,14 @@ const songArtist = document.querySelector('.play-zone-right__artist');
 const progressBar = document.querySelector('.progress-bar');
 const durationDisplay = document.querySelector('.duration-display');
 const progrssTime = document.querySelector('.progress-time');
-const playElement = document.querySelector('.play-song')
+ //const playSongElements = document.querySelectorAll('.play-song')
 const marqueeContent = document.querySelector('.marquee-content')
+
+
+            
 
 pauseButton.style.display = 'none'; // Hide pause button initially
  const audio = new Audio();
- 
  const songsData = {
     songs:[... allSongs],
     currentSongIndex: 0,
@@ -73,7 +75,8 @@ const shuffleSongs = () => {
 // If the current song is the first one, it loops back to the last song in the playlist
 // It updates the current song index and plays the song
 const playPreviousSong = () => {
-  console.log('curr song',songsData.currentSong)
+    playButton.style.display ='none'
+   pauseButton.style.display='block'
 
   if(songsData.currentSong ===null || songsData.currentSong.id === 0){
       songArtist.textContent ="No previous song to play."
@@ -88,8 +91,28 @@ const playPreviousSong = () => {
 };  
  
 const playPauseBtn = ()=> {
-    songsData.isPlaying ? playButton.style.display = "none"
-    : pauseButton.style.display="block" 
+    
+//    (playButton.style.display == "block")?
+    //    pauseButton.style.display="none" 
+    //    :pauseButton.style.display = 'block' 
+   
+    
+    
+      
+    //    switch(play){
+    //     case "block":
+    //         playButton.style.display = 'none';
+    //         pauseButton.style.display = 'block'
+    //         break;
+    //         case 'none':
+    //             playButton.style.display = 'block'
+    //             pauseButton.style.display = 'none';
+    //             break;
+
+    //             default: 
+    //             playButton.style.display = play ;
+    //             break;    
+    //    }   
 }
 
 //check if the no song playing then grab the first song
@@ -122,13 +145,24 @@ const getCurrentSongIndex = (songId) => {
 }
 
 const pauseSong = () => {
+    
+       playButton.style.display ='block'
+       pauseButton.style.display='none'
+     //playPauseBtn(pauseButton.style.display)
         songsData.songCurrentTime = audio.currentTime;
         audio.pause() 
 }; 
 
 const playSong = (id) => {
-
-    
+   
+         songsData.isPlaying = !songsData.isPlaying
+        playSongElements.forEach(el =>{
+            if(Number(el.dataset.songId) === id ){
+                el.classList.add("focus-playing-song")
+            }else{
+                el.classList.remove('focus-playing-song')
+            }
+        })
         const song = songsData.songs.find(song => song.id === id);
         const currentSongTitle= song.title;
         const currentSongArtist = song.artist;
@@ -136,7 +170,7 @@ const playSong = (id) => {
         audio.src = currentSongSrc; 
         audio.title =currentSongArtist; 
         audio.load(); // Load the new audio source
-        console.log( 'type of id',typeof  song.id)
+        
         songTitle.textContent  = currentSongTitle? currentSongTitle : 'Song Title';
         songArtist.textContent = currentSongArtist ? currentSongArtist : 'Artist Name';
         durationDisplay.textContent = song.duration;
@@ -153,15 +187,18 @@ const playSong = (id) => {
           <span> ${currentSongTitle}</span>`
         songsData.currentSong = song; 
             audio.play();
+            if(audio.play ) songsData.isPlaying = !songsData.isPlaying
+
+             console.log('curr song',songsData.currentSong)
     }
 
 audio.addEventListener('ended', () => {
-    console.log('Song ended');
      playNextSong()
 }); 
 
 const songList = document.querySelector('.music-list__items');
 const displaySongs = (songs) => {
+   
     songList.innerHTML = ''; // Clear the existing list
     songs.forEach((song) => {
        if(song !== undefined){
@@ -187,34 +224,39 @@ const displaySongs = (songs) => {
        }
 });
 }
-displaySongs(songsData.songs);
+let songs = [...songsData.songs]
+console.log('songs',songs)
+displaySongs(songs);
 
  shuffleButton.addEventListener('click', () => {
     shuffleSongs();
-    // pauseButton.style.display ='none'
-    // playButton.style.display="block"
-    // playPauseBtn()
-    const firstSong = songsData.songs[songsData.currentSongIndex];
+    
+   // const firstSong = songsData.songs[songsData.currentSongIndex];
 });
 
 previousButton.addEventListener('click',playPreviousSong);
+
 pauseButton.addEventListener('click', ()=>{
-//   playPauseBtn()
+  playButton.style.display ='block'
+   pauseButton.style.display='none'
+    playPauseBtn()
     pauseSong()
+
 });
 nextButton.addEventListener('click',()=>{
-    // playButton.style.display ='none'
-    // pauseButton.style.display='block'
-    playPauseBtn()
+     playButton.style.display ='none'
+     pauseButton.style.display='block'
+    //playPauseBtn()
     playNextSong()
 })
 
 playButton.addEventListener('click', () => {
-    // pauseButton.style.display = 'block'; // Show pause button when play button is clicked
-    // playButton.style.display = 'none'; // Hide play button when play button is clicked
+      pauseButton.style.display = 'block'; // Show pause button when play button is clicked
+      playButton.style.display = 'none'; // Hide play button when play button is clicked
         playPauseBtn()
         if (songsData.currentSong === null) {
             playSong(songsData.songs[0].id);
+
         } else {
            audio.currentTime = songsData.songCurrentTime
             const song = songsData.currentSong;
@@ -234,7 +276,6 @@ audio.addEventListener('timeupdate', () => {
     const progressPercentage = (currentTime / duration) * 100;
     progressBar.value = progressPercentage; 
     songsData.songCurrentTime = currentTime; // Update the current song time
-  
      progrssTime.textContent = `${(formatTime((currentTime)))}`;
 });
 
@@ -243,7 +284,6 @@ const formatTime = (time) => {
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
-
       //click on the element to play start playing
       // create a data attribut to store each specific id 
       // access all the elements then attach an event to each of then
@@ -253,18 +293,85 @@ const formatTime = (time) => {
       playSongElements.forEach((el)=>{
           el.addEventListener('click',()=>{
             playSong(Number(el.dataset.songId))
-            // playButton.style.display ="none"
-            // pauseButton.style.display = 'block'
+            playButton.style.display ="none"
+            pauseButton.style.display = 'block'
             playPauseBtn()
         } )
       })
-
     const  deleteBtn = document.querySelectorAll('.music-list__item--button');
+
+    //let  shallowSongs = [...songsData.songs]
+
+      const deleteSong =(songId)=>{
+        
+        console.log('song id',songId)
+        const newData = [];
+        let filteredSongs = songs.filter((song)=> song.id !== Number(songId))
+        //   for(let i = 0; i<shallowSongs.length -1; i++){
+        //     if(shallowSongs[i].id!== Number(songId)){
+        //        newData.push(shallowSongs[i])
+              
+                
+        //     }
+         
+        //   }  
+        
+         songs = filteredSongs
+     
+         if(!songs.length){
+            songList.innerHTML = `<li><button class='refresh-btn'>Refresh</button><li/>`
+            let refresBtn = document.querySelector(".refresh-btn")
+            refresBtn.addEventListener('click', ()=>{
+                let refreshing = [...songsData.songs]
+                displaySongs(refreshing)
+            })
+         }
+    console.log('length',songs.length)
+     
+   return filteredSongs
+   
+
+        // //   songsData.currentSong = null;
+        // //     songsData.songCurrentTime = 0;
+        // //     audio.currentTime = 0;
+        // //     audio.pause()
+        // //     pauseButton.style.display = 'none'
+        // //     playButton.style.display='block'
+            
+
+        //      if(filteredSongs.length){
+        //          btn.parentElement.remove();
+
+        //      }else {
+        //          songList.innerHTML = ""
+        //          songList.innerHTML = `<li><button class='refresh-btn' >Refresh</button></li>` 
+        //     //     let refrBtn = document.querySelector(".refresh-btn")
+        //     //  console.log('btn',refrBtn)
+        //     // //  refrBtn.addEventListener('click',()=>{
+        //     //     console.log('clicked')
+        //     //    // displaySongs(songsData.songs)
+        //     //  })
+           
+        //      }
+        //     songsData.songs = filteredSongs
+        // // displaySongs(songsData.songs)
+
+      }
+       
     deleteBtn.forEach((btn) => {
+      
         btn.addEventListener('click', ()=>{
-            const songId = btn.getAttribute('data-id');
-            btn.parentElement.remove();   
-            songsData.songs.splice(songId,1)
+             const songId = btn.getAttribute('data-id');
+           deleteSong(songId)
+           btn.parentElement.remove()
         })
+        
     })
+
+  
+    // refreshBtn.addEventListener('click', ()=>{
+    //     console.log('ref', songList)
+
+    // })
+    
     
