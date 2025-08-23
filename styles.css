@@ -388,9 +388,13 @@ label[for="volume"]{
 }   
 
 .refresh-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: auto;
     padding: 10px;
-    background-color: #0b1521;
+    font-size: 1.2rem;
+    background-color: #8D712A;
     color: whitesmoke;
     border: 1px solid #0b1521;
     border-radius: 10%;
@@ -399,7 +403,7 @@ label[for="volume"]{
     
 }
 .refresh-btn:hover{
-    background-color: #04040a;
+    background-color: #131355;
 }
 @media(max-width: 700px){
     .play-station, .play-list{
@@ -568,13 +572,16 @@ margin : 0 5px
        
 }
 
-li > .refresh-btn{
+/* li > .refresh-btn{
     text-align: center;
     font-size: 1.2rem;
-    
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    border:2px solid  blue
+    border: none;
 }
+li > .refresh-btn:hover{
+    background-color: #131355;
+    border: 1px solid #333
+} */

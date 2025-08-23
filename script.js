@@ -52,7 +52,7 @@ const shuffleSongs = () => {
         [songsData.songs[i], songsData.songs[j]] = [songsData.songs[j], songsData.songs[i]];
     }
    
-    displaySongs(songsData.songs);
+  //  displaySongs(songsData.songs);
     songsData.isPlaying = false; 
     songsData.currentSong = null; 
     songsData.songCurrentTime = 0; 
@@ -63,11 +63,14 @@ const shuffleSongs = () => {
     audio.load(); // Load the new audio source
     songsData.isPlaying = false; 
     songsData.currentSong = songsData.songs[songsData.currentSongIndex]; 
-    // Set the current song to the first song after shuffling
+   
     songTitle.textContent = songsData.currentSong.title || 'Song Title';
     songArtist.textContent = songsData.currentSong.artist || 'Artist Name';
-    songsData.songCurrentTime = 0; // Reset current time after shuffle
-    audio.currentTime = 0; // Reset audio current time after shuffle
+    songsData.songCurrentTime = 0; 
+    audio.currentTime = 0; 
+
+    playButton.style.display = 'block'
+    pauseButton.style.display = 'none'
    
 };  
 //play previous song function
@@ -154,9 +157,10 @@ const pauseSong = () => {
 }; 
 
 const playSong = (id) => {
-   
          songsData.isPlaying = !songsData.isPlaying
         playSongElements.forEach(el =>{
+              console.log('play song ')
+        
             if(Number(el.dataset.songId) === id ){
                 el.classList.add("focus-playing-song")
             }else{
@@ -188,8 +192,6 @@ const playSong = (id) => {
         songsData.currentSong = song; 
             audio.play();
             if(audio.play ) songsData.isPlaying = !songsData.isPlaying
-
-             console.log('curr song',songsData.currentSong)
     }
 
 audio.addEventListener('ended', () => {
@@ -199,7 +201,8 @@ audio.addEventListener('ended', () => {
 const songList = document.querySelector('.music-list__items');
 const displaySongs = (songs) => {
    
-    songList.innerHTML = ''; // Clear the existing list
+    songList.innerHTML = ''; 
+
     songs.forEach((song) => {
        if(song !== undefined){
      const songItem = document.createElement('li');
@@ -225,13 +228,11 @@ const displaySongs = (songs) => {
 });
 }
 let songs = [...songsData.songs]
-console.log('songs',songs)
+
 displaySongs(songs);
 
  shuffleButton.addEventListener('click', () => {
     shuffleSongs();
-    
-   // const firstSong = songsData.songs[songsData.currentSongIndex];
 });
 
 previousButton.addEventListener('click',playPreviousSong);
@@ -290,88 +291,90 @@ const formatTime = (time) => {
       // get the data attribute for each and convert it back to
       // number then pass it into playsong function as param.
       const playSongElements = document.querySelectorAll('.play-song')
-      playSongElements.forEach((el)=>{
+      
+      const playSongElement = (elements) =>{
+ elements.forEach((el)=>{
           el.addEventListener('click',()=>{
+            console.log('el dataset', el.dataset.songId)
             playSong(Number(el.dataset.songId))
             playButton.style.display ="none"
             pauseButton.style.display = 'block'
-            playPauseBtn()
+            //playPauseBtn()
         } )
       })
+      }
+
+     playSongElement(playSongElements)
+
     const  deleteBtn = document.querySelectorAll('.music-list__item--button');
 
-    //let  shallowSongs = [...songsData.songs]
-
       const deleteSong =(songId)=>{
-        
-        console.log('song id',songId)
-        const newData = [];
         let filteredSongs = songs.filter((song)=> song.id !== Number(songId))
-        //   for(let i = 0; i<shallowSongs.length -1; i++){
-        //     if(shallowSongs[i].id!== Number(songId)){
-        //        newData.push(shallowSongs[i])
-              
-                
-        //     }
-         
-        //   }  
-        
          songs = filteredSongs
-     
+         songsData.currentSong = null;
+         songsData.songCurrentTime = 0;
+         songsData.currentSongIndex = 0;
+         audio.pause()
          if(!songs.length){
             songList.innerHTML = `<li><button class='refresh-btn'>Refresh</button><li/>`
-            let refresBtn = document.querySelector(".refresh-btn")
-            refresBtn.addEventListener('click', ()=>{
-                let refreshing = [...songsData.songs]
-                displaySongs(refreshing)
-            })
-         }
-    console.log('length',songs.length)
-     
+            let refreshBtn = document.querySelector(".refresh-btn")
+               refreshpage(refreshBtn)
+         } 
    return filteredSongs
-   
-
-        // //   songsData.currentSong = null;
-        // //     songsData.songCurrentTime = 0;
-        // //     audio.currentTime = 0;
-        // //     audio.pause()
-        // //     pauseButton.style.display = 'none'
-        // //     playButton.style.display='block'
-            
-
-        //      if(filteredSongs.length){
-        //          btn.parentElement.remove();
-
-        //      }else {
-        //          songList.innerHTML = ""
-        //          songList.innerHTML = `<li><button class='refresh-btn' >Refresh</button></li>` 
-        //     //     let refrBtn = document.querySelector(".refresh-btn")
-        //     //  console.log('btn',refrBtn)
-        //     // //  refrBtn.addEventListener('click',()=>{
-        //     //     console.log('clicked')
-        //     //    // displaySongs(songsData.songs)
-        //     //  })
-           
-        //      }
-        //     songsData.songs = filteredSongs
-        // // displaySongs(songsData.songs)
-
       }
        
+
+      const refreshpage =(btn)=>{
+         btn.addEventListener('click', ()=>{
+                let refreshing = [...songsData.songs]
+                displaySongs(songsData.songs)
+                
+              
+            //    playSongElement(playSongElements)
+               
+               Array.from(songList.children).forEach(child =>{
+              const children = Array.from(child.children)[0]
+              const deleteBtn = Array.from(child.children)[1]
+             console.log('d',deleteBtn)
+           children.addEventListener('click',()=>{
+                    const id = children.dataset.songId;
+                 playSong(Number(id))
+                 playButton.style.display = 'none';
+                 pauseButton.style.display = 'block'
+                 console.log('curr',songsData.currentSong.id)
+                 console.log(songsData.isPlaying)
+               }) 
+            deleteBtn.addEventListener("click",()=>{
+                console.log('childdddd', child.dataset.id)
+                 deleteSong(child.dataset.id)
+               
+               })
+
+               })
+
+            })
+
+      }
+
+
     deleteBtn.forEach((btn) => {
-      
         btn.addEventListener('click', ()=>{
              const songId = btn.getAttribute('data-id');
+             audio.pause();
+             audio.currentTime = 0;
+            // songsData.currentSong = null;
+            // songsData.currentTime = 0;
+            songsData.isPlaying = false;
+            songTitle.textContent = 'Title'
+            songArtist.textContent = 'Name'
+            playButton.style.display = 'block'
+            pauseButton.style.display = 'none'
            deleteSong(songId)
            btn.parentElement.remove()
         })
         
     })
 
-  
-    // refreshBtn.addEventListener('click', ()=>{
-    //     console.log('ref', songList)
 
-    // })
     
     

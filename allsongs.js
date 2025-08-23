@@ -20,7 +20,13 @@ export const allSongs = [
     duration: "3:51",
     src: "https://cdn.freecodecamp.org/curriculum/js-music-player/still-learning.mp3",
   },
-  {
+  
+  
+];
+
+/**
+ * {
+ * {
     id: 3,
     title: "Cruising for a Musing",
     artist: "Quincy Lars",
@@ -34,7 +40,6 @@ export const allSongs = [
     duration: "3:35",
     src: "https://cdn.freecodecamp.org/curriculum/js-music-player/never-not-favored.mp3",
   },
-  {
     id: 5,
     title: "From the Ground Up",
     artist: "Quincy Larson",
@@ -69,4 +74,4 @@ export const allSongs = [
     duration: "2:43",
     src: "https://cdn.freecodecamp.org/curriculum/js-music-player/chasing-that-feeling.mp3",
   },
-];
+ */
